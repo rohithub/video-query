@@ -1,13 +1,19 @@
 
 Video file = dashVid1.avi, Frame skip rate = 5
-Elapsed time 144357
+Elapsed time 48587
+Video load time 351
 Video file = dashVid1.avi, Frame skip rate = 10
-Elapsed time 141326
+Elapsed time 45810
+Video load time 275
 Video file = dashVid1.avi, Frame skip rate = 20
-Elapsed time 137913
+Elapsed time 45236
+Video load time 300
 Video file = dashVid1.avi, Frame skip rate = 50
-Elapsed time 137109
+Elapsed time 44727
+Video load time 317
 Video file = dashVid1.avi, Frame skip rate = 100
-Elapsed time 135681
+Elapsed time 44338
+Video load time 299
 Video file = dashVid1.avi, Frame skip rate = 200
-Elapsed time 135416
+Elapsed time 44473
+Video load time 311
