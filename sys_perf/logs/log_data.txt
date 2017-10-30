@@ -1,0 +1,3 @@
+
+Video file = dashVid1.avi, Frame skip rate = 5
+Total time = 40366, Video load = 195, Video Open Check = 0, Im read = 72, RGB 2 Gray = 4, Resize = 0
