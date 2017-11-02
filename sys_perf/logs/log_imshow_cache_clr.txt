@@ -1,0 +1,7 @@
+
+Video file = /home/rohit/Videos/train_vid/dashVid1.avi, Frame skip rate = 0
+Num of Frames = 6960
+Total time = 94465, Video load = 303, Video Open Check = 0, Im read = 100, RGB 2 Gray = 12, Resize = 2
+Video file = /home/rohit/Videos/train_vid/dashVid1.avi, Frame skip rate = 20
+Num of Frames = 348
+Total time = 34112, Video load = 285, Video Open Check = 0, Im read = 76, RGB 2 Gray = 12, Resize = 2

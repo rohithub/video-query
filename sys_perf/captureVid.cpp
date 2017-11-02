@@ -12,11 +12,12 @@
 #define ENABLE_RGB2GRAY		1
 //#define TIME_FROM_CLOCK
 #define ENABLE_DIFF_WRITE_FILE	0
+#define LOG_TYPE_INFO		0
 
 /********************************************************************/
 #define FRAME_SKIP_RATE		10
 #define MAX_INPUT_ARG		4 //Includes the name of the executable
-#define MAX_STRING_LEN		30
+#define MAX_STRING_LEN		255
 
 using namespace cv;
 
@@ -65,7 +66,9 @@ int main(int argn, char** argv)
 	vid_file_name = (char*)malloc(sizeof(char) * MAX_STRING_LEN);
 
 	strcpy(vid_file_name, argv[1]);
+	#if (LOG_TYPE_INFO == 1)
 	out_fp << "Video file = " << vid_file_name << ", Frame skip rate = " << frame_skip_rate << std::endl;
+	#endif
 	std::cout << "Frame skip rate = " << frame_skip_rate << std::endl;
 
 	#ifdef TIME_FROM_CLOCK	
@@ -205,6 +208,7 @@ int main(int argn, char** argv)
 	out_fp << "Num of Frames = " << num_of_frames << std::endl;
 	out_fp << " Total time = " << (end_time - start_time) << ", Video Load = "<< (time_1 - start_time) << ", Video Open Check = " << (time_2 - time_1) << ", Im read = " << (time_3 - time_2) << ", RGB 2 Gray = " << (time_4 - time_3) << ", Resize = "<< (time_5 - time_4) << std::endl;
 	#else
+	#if (LOG_TYPE_INFO == 1)
 	out_fp << "Num of Frames = " << num_of_frames << std::endl;
 	elapsed_time = ((end_time.tv_sec - start_time.tv_sec) * 1000) + ((end_time.tv_usec - start_time.tv_usec)/1000); 
 	out_fp << "Total time = " << elapsed_time ;
@@ -223,9 +227,28 @@ int main(int argn, char** argv)
 	
 	elapsed_time = ((time_5.tv_sec - time_4.tv_sec) * 1000) + ((time_5.tv_usec - time_4.tv_usec)/1000); 
 	out_fp << ", Resize = " << elapsed_time  << std::endl;
+	#else
+	elapsed_time = ((end_time.tv_sec - start_time.tv_sec) * 1000) + ((end_time.tv_usec - start_time.tv_usec)/1000); 
+	out_fp << elapsed_time << " ";
+	
+	elapsed_time = ((time_1.tv_sec - start_time.tv_sec) * 1000) + ((time_1.tv_usec - start_time.tv_usec)/1000); 
+	out_fp << elapsed_time << " ";
+	
+	elapsed_time = ((time_2.tv_sec - time_1.tv_sec) * 1000) + ((time_2.tv_usec - time_1.tv_usec)/1000); 
+	out_fp << elapsed_time << " " ;
+	
+	elapsed_time = ((time_3.tv_sec - time_2.tv_sec) * 1000) + ((time_3.tv_usec - time_2.tv_usec)/1000); 
+	out_fp << elapsed_time << " " ;
+	
+	elapsed_time = ((time_4.tv_sec - time_3.tv_sec) * 1000) + ((time_4.tv_usec - time_3.tv_usec)/1000); 
+	out_fp << elapsed_time << " " ;
+	
+	elapsed_time = ((time_5.tv_sec - time_4.tv_sec) * 1000) + ((time_5.tv_usec - time_4.tv_usec)/1000); 
+	out_fp << elapsed_time  << std::endl;
+
+	#endif
 	#endif
 	out_fp.close();
 	return 0;
 }
 
-//gettimeoftheday for clock, calculate the time for each of of the items, do 10000 cycles, different API for read, grab and retrieve, collect a histogram between frames, make a graph for skip rate 1
