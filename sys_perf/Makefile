@@ -1,48 +1,47 @@
-#!/bin/sh
+SHELL := /bin/bash
+
 .PHONY: all
 
-#n ?= 0
-all:	no_show 
+all:	no_show clr_cache_no_show
 
-no_show:
-	$(file >logs/log_no_imshow.txt,$^)
-	./build.sh
-	#i=$(n); 
-	i=0; \
-	while [ $${i} -le 1 ] ; do \
+no_show:	$(file >logs/log_no_imshow.txt,$^)
+	./build.sh;
+	for (( i=1; i<120; i=i+1 )); \
+	do \
 		echo "Iteration $$i"; \
-		./captureVid /home/rohit/Videos/train_vid/dashVid1.avi logs/log_no_imshow.txt 0 ; \
-		i = `echo $$i + 1`; \
+		./captureVid /home/rohit/Videos/train_vid/dashVid1.avi logs/log_no_imshow.txt 0; \
 	done
 
 clr_cache_no_show:
 	$(file >logs/log_no_imshow_cache_clr.txt,$^)
 	./build.sh
-	i=$(i); \
-	while [ $${i} -le 1 ] ; do \
+	for (( i=1; i<120; i=i+1 )); \
+	do \
+		echo "Iteration $$i"; \
 		sync; \
 		sudo sh -c 'echo 3 >/proc/sys/vm/drop_caches' && swapoff -a && swapon -a; \
 		./captureVid /home/rohit/Videos/train_vid/dashVid1.avi logs/log_no_imshow_cache_clr.txt 0 ; \
-		i = `expr $$i + 1` \
 	done
 
 show:
 	i=1
 	$(file >logs/log_imshow.txt,$^)
 	./build.sh ENABLE_IMSHOW
-	while [ $${i} -le 100 ] ; do \
+	for (( i=1; i<120; i=i+1 )); \
+	do \
+		echo "Iteration $$i"; \
 		./captureVid /home/rohit/Videos/train_vid/dashVid1.avi logs/log_imshow.txt 0 ; \
-		i = $(( i+1 )) \
 	done
 
 clr_cache_show:
 	i=1
 	$(file >logs/log_imshow_cache_clr.txt,$^)
 	./build.sh ENABLE_IMSHOW
-	while [ $${i} -le 100 ] ; do \
+	for (( i=1; i<120; i=i+1 )); \
+	do \
+		echo "Iteration $$i"; \
 		sync; \
 		sudo sh -c 'echo 3 >/proc/sys/vm/drop_caches' && swapoff -a && swapon -a; \
 		./captureVid /home/rohit/Videos/train_vid/dashVid1.avi logs/log_imshow_cache_clr.txt 0 ; \
-		i = $(( i+1 )) \
 	done
 
