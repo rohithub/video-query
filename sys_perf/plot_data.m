@@ -5,10 +5,8 @@ clc;
 num_frame_skips = 6; %[5 10 20 50 100 200]
 num_data_points = 1160; %assuming for frame_skip = 5
 
-% path = 'C:\Users\Rohit\Documents\Umich Courses\Prof Wenisch Project\logs\Older\frame_diff\log_imshow.txt';
-path = 'C:\Users\Rohit\Documents\Umich Courses\Prof Wenisch Project\logs\Older\frame_diff\log_imshow_cache_clr.txt';
-% path = 'C:\Users\Rohit\Documents\Umich Courses\Prof Wenisch Project\logs\Older\frame_diff\log_imshow.txt';
-% path = 'C:\Users\Rohit\Documents\Umich Courses\Prof Wenisch Project\logs\Older\frame_diff\log_imshow.txt';
+path = 'C:\Users\Rohit\Documents\GitHub\video-query\sys_perf\logs\log_no_imshow_cache_clr.txt';
+
 file_p = fopen(path,'r');
 myContent = textscan(file_p, '%s');
 data_matrix = zeros(num_frame_skips, num_data_points);
