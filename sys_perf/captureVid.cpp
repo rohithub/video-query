@@ -18,6 +18,8 @@
 #define FRAME_SKIP_RATE		10
 #define MAX_INPUT_ARG		4 //Includes the name of the executable
 #define MAX_STRING_LEN		255
+#define IM_RESIZE_W		400
+#define IM_RESIZE_H		400
 
 using namespace cv;
 
@@ -106,6 +108,11 @@ int main(int argn, char** argv)
 		std::cout << "ERROR: Couldn't grab the first frame \n";
 		return -1;
 	}
+	#ifdef TIME_FROM_CLOCK	
+	time_6 = get_process_time();
+	#else
+	gettimeofday(&time_6, NULL);
+	#endif
 
 	if(!cap.retrieve(prev_image, 0))
 	{
@@ -136,7 +143,7 @@ int main(int argn, char** argv)
 	#endif
 
 	#ifdef ENABLE_IMAGE_RESIZE
-	resize(prev_image, prev_resized_im, Size(800,600));
+	resize(prev_image, prev_resized_im, Size(IM_RESIZE_W,IM_RESIZE_H));
 	#endif
 	
 	#ifdef TIME_FROM_CLOCK	
@@ -170,24 +177,24 @@ int main(int argn, char** argv)
 				#endif
 
 				#ifdef ENABLE_IMAGE_RESIZE
-					resize(next_image, next_resized_im, Size(800,600));
-					diff_image = next_resized_im - prev_resized_im;
+					resize(next_image, next_resized_im, Size(IM_RESIZE_W,IM_RESIZE_H));
+//					diff_image = next_resized_im - prev_resized_im;
 					#ifdef ENABLE_IMSHOW
 					imshow("Resized images",diff_image);
 					waitKey(1);
 					#endif
-					tot_sum = sum(diff_image)/(800*600*255);
+//					tot_sum = sum(diff_image)/(IM_RESIZE_W*IM_RESIZE_H*255);
 					#if (ENABLE_DIFF_WRITE_FILE == 1)
 					out_fp << tot_sum[0] << std::endl;
 					#endif
 					prev_resized_im = next_resized_im.clone();
 				#else
-					diff_image = next_image - prev_image;
+//					diff_image = next_image - prev_image;
 					#ifdef ENABLE_IMSHOW
 					imshow("Diff images",diff_image);
 					waitKey(1);
 					#endif
-					tot_sum = sum(diff_image)/(diff_image.cols*diff_image.rows*255);
+//					tot_sum = sum(diff_image)/(diff_image.cols*diff_image.rows*255);
 					#if (ENABLE_DIFF_WRITE_FILE == 1)
 					out_fp << tot_sum[0] << std::endl;
 					#endif
@@ -206,7 +213,7 @@ int main(int argn, char** argv)
 
 	#ifdef TIME_FROM_CLOCK
 	out_fp << "Num of Frames = " << num_of_frames << std::endl;
-	out_fp << " Total time = " << (end_time - start_time) << ", Video Load = "<< (time_1 - start_time) << ", Video Open Check = " << (time_2 - time_1) << ", Im read = " << (time_3 - time_2) << ", RGB 2 Gray = " << (time_4 - time_3) << ", Resize = "<< (time_5 - time_4) << std::endl;
+	out_fp << " Total time = " << (end_time - start_time) << ", Video Load = "<< (time_1 - start_time) << ", Video Open Check = " << (time_2 - time_1) << ", Im grab = " << (time_6 - time_2) << ", Im retrieve"<< (time_3 - time_6) << ", RGB 2 Gray = " << (time_4 - time_3) << ", Resize = "<< (time_5 - time_4) << std::endl;
 	#else
 	#if (LOG_TYPE_INFO == 1)
 	out_fp << "Num of Frames = " << num_of_frames << std::endl;
@@ -219,15 +226,20 @@ int main(int argn, char** argv)
 	elapsed_time = ((time_2.tv_sec - time_1.tv_sec) * 1000) + ((time_2.tv_usec - time_1.tv_usec)/1000); 
 	out_fp << ", Video Open Check = " << elapsed_time;
 	
-	elapsed_time = ((time_3.tv_sec - time_2.tv_sec) * 1000) + ((time_3.tv_usec - time_2.tv_usec)/1000); 
-	out_fp << ", Im read = " << elapsed_time;
+	elapsed_time = ((time_6.tv_sec - time_2.tv_sec) * 1000) + ((time_6.tv_usec - time_2.tv_usec)/1000); 
+	out_fp << ", Im grab = " << elapsed_time;
+	
+	elapsed_time = ((time_3.tv_sec - time_6.tv_sec) * 1000) + ((time_3.tv_usec - time_6.tv_usec)/1000); 
+	out_fp << ", Im retrieve = " << elapsed_time;
 	
 	elapsed_time = ((time_4.tv_sec - time_3.tv_sec) * 1000) + ((time_4.tv_usec - time_3.tv_usec)/1000); 
 	out_fp << ", RGB 2 Gray = " << elapsed_time;
 	
 	elapsed_time = ((time_5.tv_sec - time_4.tv_sec) * 1000) + ((time_5.tv_usec - time_4.tv_usec)/1000); 
 	out_fp << ", Resize = " << elapsed_time  << std::endl;
+
 	#else
+
 	elapsed_time = ((end_time.tv_sec - start_time.tv_sec) * 1000) + ((end_time.tv_usec - start_time.tv_usec)/1000); 
 	out_fp << elapsed_time << " ";
 	
@@ -237,7 +249,10 @@ int main(int argn, char** argv)
 	elapsed_time = ((time_2.tv_sec - time_1.tv_sec) * 1000) + ((time_2.tv_usec - time_1.tv_usec)/1000); 
 	out_fp << elapsed_time << " " ;
 	
-	elapsed_time = ((time_3.tv_sec - time_2.tv_sec) * 1000) + ((time_3.tv_usec - time_2.tv_usec)/1000); 
+	elapsed_time = ((time_6.tv_sec - time_2.tv_sec) * 1000) + ((time_6.tv_usec - time_2.tv_usec)/1000); 
+	out_fp << elapsed_time << " " ;
+	
+	elapsed_time = ((time_3.tv_sec - time_6.tv_sec) * 1000) + ((time_3.tv_usec - time_6.tv_usec)/1000); 
 	out_fp << elapsed_time << " " ;
 	
 	elapsed_time = ((time_4.tv_sec - time_3.tv_sec) * 1000) + ((time_4.tv_usec - time_3.tv_usec)/1000); 
