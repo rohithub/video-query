@@ -1,10 +1,14 @@
 #include "opencv2/opencv.hpp"
 #include "opencv2/videoio.hpp"
+#include "opencv2/core/core.hpp"
 #include <iostream>
 #include <fstream>
 #include <time.h>
 #include <sys/time.h>
 #include <sys/resource.h>
+#include <vector>
+//#include "highgui.h"
+#include "opencv2/imgcodecs.hpp"
 
 // Pre-processor directives, controlled from g++ -D inputs
 //#define ENABLE_IMSHOW		1
@@ -13,6 +17,7 @@
 //#define TIME_FROM_CLOCK
 #define ENABLE_DIFF_WRITE_FILE	0
 #define LOG_TYPE_INFO		0
+#define ENABLE_WRITE_FRAMES	1
 
 /********************************************************************/
 #define FRAME_SKIP_RATE		10
@@ -46,6 +51,11 @@ int main(int argn, char** argv)
 	char* log_file_loc;
 	Scalar tot_sum, max_sum;
 	unsigned long long num_of_frames = 0;
+	char im_write_loc[200] = "frames/";
+	char im_wr_type[6] = ".jpg";
+	char im_wr_num[8] = "";
+	char final_string[250] = "";
+	unsigned int frame_num = 0;
 
 	Mat prev_image, next_image;
 	Mat prev_resized_im, next_resized_im;
@@ -96,7 +106,6 @@ int main(int argn, char** argv)
 	gettimeofday(&time_2, NULL);
 	#endif
 	
-	//if(!cap.read(prev_image)) // Read one image at the start
 	if(!cap.grab())
 	{
 		#ifdef TIME_FROM_CLOCK
@@ -152,6 +161,11 @@ int main(int argn, char** argv)
 	gettimeofday(&time_5, NULL);
 	#endif
 
+	std::vector<int> compression_param;
+	#ifdef ENABLE_WRITE_FRAMES
+	cv::imwrite("frames/0.jpg", prev_resized_im, compression_param);
+	#endif
+
 	for(;;)
 	{
 		count++;
@@ -164,6 +178,7 @@ int main(int argn, char** argv)
 		{	
 			if(count >= frame_skip_rate)
 			{
+				frame_num++;
 				if(!cap.retrieve(next_image, 0))
 				{
 					break;
@@ -184,6 +199,12 @@ int main(int argn, char** argv)
 					waitKey(1);
 					#endif
 //					tot_sum = sum(diff_image)/(IM_RESIZE_W*IM_RESIZE_H*255);
+					#ifdef ENABLE_WRITE_FRAMES
+					//itoa(frame_num, im_write_num, 8);
+					//strcat()
+					sprintf(final_string, "frames/%llu.jpg",num_of_frames);
+					cv::imwrite(final_string, next_resized_im);
+					#endif
 					#if (ENABLE_DIFF_WRITE_FILE == 1)
 					out_fp << tot_sum[0] << std::endl;
 					#endif
@@ -195,6 +216,13 @@ int main(int argn, char** argv)
 					waitKey(1);
 					#endif
 //					tot_sum = sum(diff_image)/(diff_image.cols*diff_image.rows*255);
+					#ifdef ENABLE_WRITE_FRAMES
+					sprintf(final_string, "frames/%llu.jpg",num_of_frames);
+					cv::imwrite(final_string, next_resized_im);
+					#endif
+					#ifdef ENABLE_WRITE_FRAMES
+					imwrite("frames/0.jpg", prev_resized_im);
+					#endif
 					#if (ENABLE_DIFF_WRITE_FILE == 1)
 					out_fp << tot_sum[0] << std::endl;
 					#endif
