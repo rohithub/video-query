@@ -13,7 +13,7 @@
 // Pre-processor directives, controlled from g++ -D inputs
 //#define ENABLE_IMSHOW		1
 #define ENABLE_IMAGE_RESIZE	1
-#define ENABLE_RGB2GRAY		1
+//#define ENABLE_RGB2GRAY		1
 #define ENABLE_DIFF_WRITE_FILE	0
 #define LOG_TYPE_INFO		1
 //#define ENABLE_WRITE_FRAMES	1
@@ -23,14 +23,15 @@
 #define FRAME_SKIP_RATE		10
 #define MAX_INPUT_ARG		4 //Includes the name of the executable
 #define MAX_STRING_LEN		255
-#define IM_RESIZE_W		400
-#define IM_RESIZE_H		400
+#define IM_RESIZE_W		224
+#define IM_RESIZE_H		224
 
 using namespace cv;
 
-double convert_to_msec(struct timeval time)
+long double convert_to_msec(struct timeval time)
 {
-	return((time.tv_sec*1000) + (time.tv_usec/1000));
+	//return((time.tv_sec*1000) + (time.tv_usec/1000));
+	return((time.tv_sec*1000000) + (time.tv_usec));
 }
 
 int main(int argn, char** argv)
@@ -102,7 +103,7 @@ int main(int argn, char** argv)
 		gettimeofday(&time_3, NULL);
 		
 		#ifdef DEBUG_ENABLED
-		std::cout << "Grab = " << (convert_to_msec(time_3) - convert_to_msec(time_2));
+		std::cout << (convert_to_msec(time_3) - convert_to_msec(time_2)) << " ";
 		#endif
 		tot_grab_time = tot_grab_time + (convert_to_msec(time_3) - convert_to_msec(time_2));
 		if(!func_retn)
@@ -120,7 +121,7 @@ int main(int argn, char** argv)
 				gettimeofday(&time_5, NULL);
 
 				#ifdef DEBUG_ENABLED
-				std::cout << ", Retrieve = " << (convert_to_msec(time_5) - convert_to_msec(time_4));
+				std::cout << (convert_to_msec(time_5) - convert_to_msec(time_4)) << " ";
 				#endif
 				tot_retrieve_time = tot_retrieve_time + (convert_to_msec(time_5) - convert_to_msec(time_4));
 
@@ -138,7 +139,7 @@ int main(int argn, char** argv)
 					gettimeofday(&time_7, NULL);
 
 					#ifdef DEBUG_ENABLED
-					std::cout << ", Color  = " << (convert_to_msec(time_7) - convert_to_msec(time_6));
+					std::cout << (convert_to_msec(time_7) - convert_to_msec(time_6)) << " ";
 					#endif
 					tot_color_time = tot_color_time + (convert_to_msec(time_7) - convert_to_msec(time_6));
 
@@ -148,7 +149,7 @@ int main(int argn, char** argv)
 						gettimeofday(&time_9, NULL);
 
 						#ifdef DEBUG_ENABLED
-						std::cout << ", Resize  = " << (convert_to_msec(time_9) - convert_to_msec(time_8)) << std::endl;
+						std::cout << (convert_to_msec(time_9) - convert_to_msec(time_8)) << " " << std::endl;
 						#endif
 						tot_resize_time = tot_resize_time + (convert_to_msec(time_9) - convert_to_msec(time_8));
 						

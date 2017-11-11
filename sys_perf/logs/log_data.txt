@@ -12,3 +12,18 @@ Total time = 65705, Video load = 260, Im grab = 2616, Im retrieve = 35713, RGB 2
 Video file = /home/rohit/Videos/train_vid/dashVid1.avi, Frame skip rate = 0
 Num of Frames = 6960
 Total time = 65042, Video load = 297, Im grab = 2584, Im retrieve = 35963, RGB 2 Gray = 21642, Resize = 4160
+Video file = /home/rohit/Videos/train_vid/dashVid1.avi, Frame skip rate = 0
+Num of Frames = 6960
+Total time = 6.51827e+07, Video load = 293472, Im grab = 2628718, Im retrieve = 35851259, RGB 2 Gray = 21812453, Resize = 4135015
+Video file = /home/rohit/Videos/train_vid/dashVid1.avi, Frame skip rate = 0
+Num of Frames = 6960
+Total time = 6.30826e+07, Video load = 272986, Im grab = 2485470, Im retrieve = 35137702, RGB 2 Gray = 20736941, Resize = 4030040
+Video file = /home/rohit/Videos/train_vid/dashVid1.avi, Frame skip rate = 0
+Num of Frames = 6960
+Total time = 6.27538e+07, Video load = 288965, Im grab = 2502259, Im retrieve = 34936915, RGB 2 Gray = 20592956, Resize = 4017295
+Video file = /home/rohit/Videos/train_vid/dashVid1.avi, Frame skip rate = 0
+Num of Frames = 6960
+Total time = 6.10961e+07, Video load = 279004, Im grab = 2698333, Im retrieve = 35160343, RGB 2 Gray = 20494035, Resize = 2142782
+Video file = /home/rohit/Videos/train_vid/dashVid1.avi, Frame skip rate = 0
+Num of Frames = 6960
+Total time = 4.56148e+07, Video load = 309050, Im grab = 5770971, Im retrieve = 33654731, RGB 2 Gray = 193, Resize = 5518300
