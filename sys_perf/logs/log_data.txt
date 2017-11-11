@@ -1,1 +1,14 @@
-63880 252 63615 0 5 3 0
+65528 296 0 5 3 0
+64533 211 0 5 3 0
+Video file = /home/rohit/Videos/train_vid/dashVid1.avi, Frame skip rate = 0
+Num of Frames = 6960
+Total time = 64612, Video load = 284, Im grab = 0, Im retrieve = 5, RGB 2 Gray = 3, Resize = 0
+Video file = /home/rohit/Videos/train_vid/dashVid1.avi, Frame skip rate = 0
+Num of Frames = 6960
+Total time = 65993, Video load = 204, Im grab = 2611, Im retrieve = 35948, RGB 2 Gray = 22927, Resize = 4119
+Video file = /home/rohit/Videos/train_vid/dashVid1.avi, Frame skip rate = 0
+Num of Frames = 6960
+Total time = 65705, Video load = 260, Im grab = 2616, Im retrieve = 35713, RGB 2 Gray = 22569, Resize = 4239
+Video file = /home/rohit/Videos/train_vid/dashVid1.avi, Frame skip rate = 0
+Num of Frames = 6960
+Total time = 65042, Video load = 297, Im grab = 2584, Im retrieve = 35963, RGB 2 Gray = 21642, Resize = 4160

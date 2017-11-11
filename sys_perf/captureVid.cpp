@@ -14,10 +14,10 @@
 //#define ENABLE_IMSHOW		1
 #define ENABLE_IMAGE_RESIZE	1
 #define ENABLE_RGB2GRAY		1
-//#define TIME_FROM_CLOCK
 #define ENABLE_DIFF_WRITE_FILE	0
-#define LOG_TYPE_INFO		0
+#define LOG_TYPE_INFO		1
 //#define ENABLE_WRITE_FRAMES	1
+#define DEBUG_ENABLED
 
 /********************************************************************/
 #define FRAME_SKIP_RATE		10
@@ -28,31 +28,15 @@
 
 using namespace cv;
 
-#ifdef TIME_FROM_CLOCK
-double get_process_time(void) 
-{
-	return (double(std::clock()) * 1000/CLOCKS_PER_SEC);
-}
-
-double convert_to_msec(double time)
-{
-	return(time);
-}
-#else
 double convert_to_msec(struct timeval time)
 {
 	return((time.tv_sec*1000) + (time.tv_usec/1000));
 }
-#endif
 
 int main(int argn, char** argv)
 {
-	#ifdef TIME_FROM_CLOCK 
-	double start_time, time_1, time_2, time_3, time_4, time_5, time_6, time_7, time_8, time_9, end_time;
-	#else
 	struct timeval start_time, time_1, time_2, time_3, time_4, time_5, time_6, time_7, time_8, time_9, end_time;
 	double elapsed_time = 0;
-	#endif
 
 	int frame_skip_rate = FRAME_SKIP_RATE;
 	char* vid_file_name;
@@ -93,18 +77,10 @@ int main(int argn, char** argv)
 	#endif
 	std::cout << "Frame skip rate = " << frame_skip_rate << std::endl;
 
-	#ifdef TIME_FROM_CLOCK	
-	start_time = get_process_time();
-	#else
 	gettimeofday(&start_time, NULL);
-	#endif
 	VideoCapture cap(vid_file_name);
-	
-	#ifdef TIME_FROM_CLOCK
-	time_1 = get_process_time();
-	#else
 	gettimeofday(&time_1, NULL);
-	#endif
+
 	if(!cap.isOpened())
 	{
 		std::cout << "ERROR: Video cannot be opened\n";
@@ -120,20 +96,14 @@ int main(int argn, char** argv)
 	{
 		count++;
 		num_of_frames_grab++;
-		#ifdef TIME_FROM_CLOCK	
-		time_2 = get_process_time();
-		#else
-		gettimeofday(&time_2, NULL);
-		#endif
-
-		func_retn = cap.grab();
-
-		#ifdef TIME_FROM_CLOCK	
-		time_3 = get_process_time();
-		#else
-		gettimeofday(&time_3, NULL);
-		#endif
 		
+		gettimeofday(&time_2, NULL);
+		func_retn = cap.grab();
+		gettimeofday(&time_3, NULL);
+		
+		#ifdef DEBUG_ENABLED
+		std::cout << "Grab = " << (convert_to_msec(time_3) - convert_to_msec(time_2));
+		#endif
 		tot_grab_time = tot_grab_time + (convert_to_msec(time_3) - convert_to_msec(time_2));
 		if(!func_retn)
 		{
@@ -144,18 +114,13 @@ int main(int argn, char** argv)
 			if(count >= frame_skip_rate)
 			{
 				
-				#ifdef TIME_FROM_CLOCK	
-				time_4 = get_process_time();
-				#else
+				num_of_frames_retrieve++;
 				gettimeofday(&time_4, NULL);
-				#endif
-				
 				func_retn = cap.retrieve(next_image, 0);
-				
-				#ifdef TIME_FROM_CLOCK	
-				time_5= get_process_time();
-				#else
 				gettimeofday(&time_5, NULL);
+
+				#ifdef DEBUG_ENABLED
+				std::cout << ", Retrieve = " << (convert_to_msec(time_5) - convert_to_msec(time_4));
 				#endif
 				tot_retrieve_time = tot_retrieve_time + (convert_to_msec(time_5) - convert_to_msec(time_4));
 
@@ -166,33 +131,24 @@ int main(int argn, char** argv)
 				else
 				{
 					count = 0;
-					num_of_frames_retrieve++;
-					#ifdef TIME_FROM_CLOCK	
-					time_6 = get_process_time();
-					#else
 					gettimeofday(&time_6, NULL);
-					#endif
 					#ifdef ENABLE_RGB2GRAY
 					cvtColor(next_image, next_image, CV_RGB2GRAY);
 					#endif
-					#ifdef TIME_FROM_CLOCK	
-					time_7 = get_process_time();
-					#else
 					gettimeofday(&time_7, NULL);
+
+					#ifdef DEBUG_ENABLED
+					std::cout << ", Color  = " << (convert_to_msec(time_7) - convert_to_msec(time_6));
 					#endif
 					tot_color_time = tot_color_time + (convert_to_msec(time_7) - convert_to_msec(time_6));
 
 					#ifdef ENABLE_IMAGE_RESIZE
-						#ifdef TIME_FROM_CLOCK	
-						time_8 = get_process_time();
-						#else
 						gettimeofday(&time_8, NULL);
-						#endif
 						resize(next_image, next_resized_im, Size(IM_RESIZE_W,IM_RESIZE_H));
-						#ifdef TIME_FROM_CLOCK	
-						time_9 = get_process_time();
-						#else
 						gettimeofday(&time_9, NULL);
+
+						#ifdef DEBUG_ENABLED
+						std::cout << ", Resize  = " << (convert_to_msec(time_9) - convert_to_msec(time_8)) << std::endl;
 						#endif
 						tot_resize_time = tot_resize_time + (convert_to_msec(time_9) - convert_to_msec(time_8));
 						
@@ -229,38 +185,27 @@ int main(int argn, char** argv)
 			}
 		}
 	}
-	#ifdef TIME_FROM_CLOCK
-	end_time = get_process_time();
-	#else
 	gettimeofday(&end_time, NULL);
-	#endif
 	cap.release();
 
-	#ifdef TIME_FROM_CLOCK
-	out_fp << "Num of Frames = " << num_of_frames << std::endl;
-	out_fp << " Total time = " << (end_time - start_time) << ", Video Load = "<< (time_1 - start_time) << ", Video Open Check = " << (time_2 - time_1) << ", Im grab = " << tot_grab_time/num_of_frames_grab << ", Im retrieve"<< tot_retrieve_time/num_of_frames_retrieve << ", RGB 2 Gray = " << (time_4 - time_3) << ", Resize = "<< (time_5 - time_4) << std::endl;
-	#else
 	#if (LOG_TYPE_INFO == 1)
-	out_fp << "Num of Frames = " << num_of_frames << std::endl;
+	out_fp << "Num of Frames = " << num_of_frames_retrieve << std::endl;
 	out_fp << "Total time = " << convert_to_msec(end_time) - convert_to_msec(start_time) ;
 	out_fp << ", Video load = " << convert_to_msec(time_1) - convert_to_msec(start_time);
-	out_fp << ", Video Open Check = " << convert_to_msec(time_2) - convert_to_msec(time_1);
-	out_fp << ", Im grab = " << tot_grab_time/num_of_frames_grab;
-	out_fp << ", Im retrieve = " << tot_retrieve_time/num_of_frames_retrieve;
-	out_fp << ", RGB 2 Gray = " << tot_color_time/num_of_frames_retrieve; 
-	out_fp << ", Resize = " << tot_resize_time/num_of_frames_retrieve << std::endl;
+	out_fp << ", Im grab = " << tot_grab_time/*/num_of_frames_grab*/;
+	out_fp << ", Im retrieve = " << tot_retrieve_time/*/num_of_frames_retrieve*/;
+	out_fp << ", RGB 2 Gray = " << tot_color_time/*/num_of_frames_retrieve*/; 
+	out_fp << ", Resize = " << tot_resize_time/*/num_of_frames_retrieve*/ << std::endl;
 	#else
 
 	out_fp << convert_to_msec(end_time) - convert_to_msec(start_time) << " ";
 	out_fp << convert_to_msec(time_1) - convert_to_msec(start_time) << " ";
-	out_fp << convert_to_msec(time_2) - convert_to_msec(time_1)  << " " ;
 	out_fp << tot_grab_time/num_of_frames_grab << " " ;
 	out_fp << tot_retrieve_time/num_of_frames_retrieve << " " ;
 	out_fp << tot_color_time/num_of_frames_retrieve  << " " ;
 	out_fp << tot_resize_time/num_of_frames_retrieve << std::endl;
-	
 	#endif
-	#endif
+
 	out_fp.close();
 	return 0;
 }
