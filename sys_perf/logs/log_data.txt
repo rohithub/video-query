@@ -27,3 +27,7 @@ Total time = 6.10961e+07, Video load = 279004, Im grab = 2698333, Im retrieve = 
 Video file = /home/rohit/Videos/train_vid/dashVid1.avi, Frame skip rate = 0
 Num of Frames = 6960
 Total time = 4.56148e+07, Video load = 309050, Im grab = 5770971, Im retrieve = 33654731, RGB 2 Gray = 193, Resize = 5518300
+Video file = /home/rohit/Videos/train_vid/dashVid1.avi, Frame skip rate = 0
+Num of Frames = 6960
+Total time = 4.96468e+07, Video load = 206479, Im grab = 6512555, Im retrieve = 36427631, RGB 2 Gray = 245, Resize = 6057120
+Video file = /home/rohit/Videos/train_vid/dashVid1.avi, Frame skip rate = 0
