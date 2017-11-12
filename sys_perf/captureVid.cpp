@@ -12,10 +12,10 @@
 
 // Pre-processor directives, controlled from g++ -D inputs
 //#define ENABLE_IMSHOW		1
-#define ENABLE_IMAGE_RESIZE	1
-//#define ENABLE_RGB2GRAY		1
+//#define ENABLE_IMAGE_RESIZE	1
+#define ENABLE_RGB2GRAY		1
 #define ENABLE_DIFF_WRITE_FILE	0
-#define LOG_TYPE_INFO		1
+//#define LOG_TYPE_INFO		1
 //#define ENABLE_WRITE_FRAMES	1
 #define DEBUG_ENABLED
 
@@ -23,15 +23,19 @@
 #define FRAME_SKIP_RATE		10
 #define MAX_INPUT_ARG		4 //Includes the name of the executable
 #define MAX_STRING_LEN		255
-#define IM_RESIZE_W		224
-#define IM_RESIZE_H		224
+#define IM_RESIZE_W		400
+#define IM_RESIZE_H		400
 
 using namespace cv;
 
+long double convert_to_usec(struct timeval time)
+{
+	return((time.tv_sec*1000000) + (time.tv_usec));
+}
+
 long double convert_to_msec(struct timeval time)
 {
-	//return((time.tv_sec*1000) + (time.tv_usec/1000));
-	return((time.tv_sec*1000000) + (time.tv_usec));
+	return((time.tv_sec*1000) + (time.tv_usec/1000));
 }
 
 int main(int argn, char** argv)
@@ -76,6 +80,7 @@ int main(int argn, char** argv)
 	#if (LOG_TYPE_INFO == 1)
 	out_fp << "Video file = " << vid_file_name << ", Frame skip rate = " << frame_skip_rate << std::endl;
 	#endif
+	out_fp << "New_iter " << std::endl;	//MATLAB will use these flags to determine start of the new iteration
 	std::cout << "Frame skip rate = " << frame_skip_rate << std::endl;
 
 	gettimeofday(&start_time, NULL);
@@ -103,9 +108,9 @@ int main(int argn, char** argv)
 		gettimeofday(&time_3, NULL);
 		
 		#ifdef DEBUG_ENABLED
-		std::cout << (convert_to_msec(time_3) - convert_to_msec(time_2)) << " ";
+		out_fp << (convert_to_usec(time_3) - convert_to_usec(time_2)) << " ";
 		#endif
-		tot_grab_time = tot_grab_time + (convert_to_msec(time_3) - convert_to_msec(time_2));
+		tot_grab_time = tot_grab_time + (convert_to_usec(time_3) - convert_to_usec(time_2));
 		if(!func_retn)
 		{
 			break;
@@ -121,9 +126,9 @@ int main(int argn, char** argv)
 				gettimeofday(&time_5, NULL);
 
 				#ifdef DEBUG_ENABLED
-				std::cout << (convert_to_msec(time_5) - convert_to_msec(time_4)) << " ";
+				out_fp << (convert_to_usec(time_5) - convert_to_usec(time_4)) << " ";
 				#endif
-				tot_retrieve_time = tot_retrieve_time + (convert_to_msec(time_5) - convert_to_msec(time_4));
+				tot_retrieve_time = tot_retrieve_time + (convert_to_usec(time_5) - convert_to_usec(time_4));
 
 				if(!func_retn)
 				{
@@ -139,9 +144,9 @@ int main(int argn, char** argv)
 					gettimeofday(&time_7, NULL);
 
 					#ifdef DEBUG_ENABLED
-					std::cout << (convert_to_msec(time_7) - convert_to_msec(time_6)) << " ";
+					out_fp << (convert_to_usec(time_7) - convert_to_usec(time_6)) << " ";
 					#endif
-					tot_color_time = tot_color_time + (convert_to_msec(time_7) - convert_to_msec(time_6));
+					tot_color_time = tot_color_time + (convert_to_usec(time_7) - convert_to_usec(time_6));
 
 					#ifdef ENABLE_IMAGE_RESIZE
 						gettimeofday(&time_8, NULL);
@@ -149,9 +154,9 @@ int main(int argn, char** argv)
 						gettimeofday(&time_9, NULL);
 
 						#ifdef DEBUG_ENABLED
-						std::cout << (convert_to_msec(time_9) - convert_to_msec(time_8)) << " " << std::endl;
+						out_fp << (convert_to_usec(time_9) - convert_to_usec(time_8)) << " " << std::endl;
 						#endif
-						tot_resize_time = tot_resize_time + (convert_to_msec(time_9) - convert_to_msec(time_8));
+						tot_resize_time = tot_resize_time + (convert_to_usec(time_9) - convert_to_usec(time_8));
 						
 						#ifdef ENABLE_IMSHOW
 							imshow("Resized images",diff_image);
@@ -166,6 +171,10 @@ int main(int argn, char** argv)
 						#endif
 						prev_resized_im = next_resized_im.clone();
 					#else
+						#ifdef DEBUG_ENABLED
+						out_fp << "0 " << std::endl; //This only ensures consistency in collected log when Resize is disabled
+						#endif
+
 						#ifdef ENABLE_IMSHOW
 							imshow("Diff images",diff_image);
 							waitKey(1);
@@ -192,15 +201,16 @@ int main(int argn, char** argv)
 	#if (LOG_TYPE_INFO == 1)
 	out_fp << "Num of Frames = " << num_of_frames_retrieve << std::endl;
 	out_fp << "Total time = " << convert_to_msec(end_time) - convert_to_msec(start_time) ;
-	out_fp << ", Video load = " << convert_to_msec(time_1) - convert_to_msec(start_time);
+	out_fp << ", Video load = " << convert_to_usec(time_1) - convert_to_usec(start_time);
 	out_fp << ", Im grab = " << tot_grab_time/*/num_of_frames_grab*/;
 	out_fp << ", Im retrieve = " << tot_retrieve_time/*/num_of_frames_retrieve*/;
 	out_fp << ", RGB 2 Gray = " << tot_color_time/*/num_of_frames_retrieve*/; 
 	out_fp << ", Resize = " << tot_resize_time/*/num_of_frames_retrieve*/ << std::endl;
 	#else
 
+	out_fp << "Final Values" << std::endl;
 	out_fp << convert_to_msec(end_time) - convert_to_msec(start_time) << " ";
-	out_fp << convert_to_msec(time_1) - convert_to_msec(start_time) << " ";
+	out_fp << convert_to_usec(time_1) - convert_to_usec(start_time) << " ";
 	out_fp << tot_grab_time/num_of_frames_grab << " " ;
 	out_fp << tot_retrieve_time/num_of_frames_retrieve << " " ;
 	out_fp << tot_color_time/num_of_frames_retrieve  << " " ;

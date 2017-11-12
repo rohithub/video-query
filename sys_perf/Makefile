@@ -2,11 +2,11 @@ SHELL := /bin/bash
 
 .PHONY: all
 
-all:	no_show clr_cache_no_show
+all:	no_show
 
 no_show:	$(file >logs/log_no_imshow.txt,$^)
 	./build.sh;
-	for (( i=1; i<20; i=i+1 )); \
+	for (( i=1; i<6; i=i+1 )); \
 	do \
 		echo "Iteration $$i"; \
 		./captureVid /home/rohit/Videos/train_vid/dashVid1.avi logs/log_no_imshow.txt 0; \
@@ -15,7 +15,7 @@ no_show:	$(file >logs/log_no_imshow.txt,$^)
 clr_cache_no_show:
 	$(file >logs/log_no_imshow_cache_clr.txt,$^)
 	./build.sh
-	for (( i=1; i<20; i=i+1 )); \
+	for (( i=1; i<6; i=i+1 )); \
 	do \
 		echo "Iteration $$i"; \
 		sync; \
