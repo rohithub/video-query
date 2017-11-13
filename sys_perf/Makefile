@@ -9,7 +9,7 @@ no_show:	$(file >logs/log_no_imshow.txt,$^)
 	for (( i=1; i<6; i=i+1 )); \
 	do \
 		echo "Iteration $$i"; \
-		./captureVid /home/rohit/Videos/train_vid/dashVid1.avi logs/log_no_imshow.txt 0; \
+		./captureVid /home/rohit/Videos/train_vid/dashVid1conv.avi logs/log_no_imshow.txt 0; \
 	done
 
 clr_cache_no_show:
