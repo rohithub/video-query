@@ -1,6 +1,4 @@
-clear;
-close all;
-clc;
+clear; close all; clc;
 
 %Log file format (all values in milliseconds)
 %Total time, Video Load, Open Chk, IM Grab, IM Retrieve, RGB 2 GRAY, Resize, 
@@ -9,10 +7,10 @@ clc;
 %Individual Img Proc log file format  (all values in microseconds)
 %Grab Time, Retrieve time, Color, Resize
 
-num_data_per_iter = 4; % Tells the number of data points collected for each iteration
+num_data_per_iter = 5; % Tells the number of data points collected for each iteration
 num_frame_skips = 0; %[5 10 20 50 100 200]
-path = 'C:\Users\Rohit\Documents\GitHub\video-query\sys_perf\logs\ind_img_proc_224x224_color.txt';
-%path = 'C:\Users\Rohit\Documents\GitHub\video-query\sys_perf\logs\log_no_imshow.txt';
+% path = 'C:\Users\Rohit\Documents\GitHub\video-query\sys_perf\logs\ind_img_proc_224x224_color.txt';
+path = 'C:\Users\Rohit\Documents\GitHub\video-query\sys_perf\logs\log_no_imshow.txt';
 
 %Read the log file, scan to get each data point and close the file
 file_p = fopen(path,'r');
@@ -21,7 +19,6 @@ fclose(file_p);
 
 %Total number of iterations is equal to total data points/data points per
 %iteration
-tot_iters = (length(myContent{1,1}) - 1)/num_data_per_iter;
 data_matrix = zeros(num_data_per_iter, tot_iters);
 
 count = 1;
