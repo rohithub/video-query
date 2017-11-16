@@ -107,9 +107,6 @@ int main(int argn, char** argv)
 		func_retn = cap.grab();
 		gettimeofday(&time_3, NULL);
 		
-		#ifdef DEBUG_ENABLED
-		out_fp << (convert_to_usec(time_3) - convert_to_usec(time_2)) << " ";
-		#endif
 		tot_grab_time = tot_grab_time + (convert_to_usec(time_3) - convert_to_usec(time_2));
 		if(!func_retn)
 		{
@@ -125,9 +122,6 @@ int main(int argn, char** argv)
 				func_retn = cap.retrieve(next_image, 0);
 				gettimeofday(&time_5, NULL);
 
-				#ifdef DEBUG_ENABLED
-				out_fp << (convert_to_usec(time_5) - convert_to_usec(time_4)) << " ";
-				#endif
 				tot_retrieve_time = tot_retrieve_time + (convert_to_usec(time_5) - convert_to_usec(time_4));
 
 				if(!func_retn)
@@ -143,9 +137,6 @@ int main(int argn, char** argv)
 					#endif
 					gettimeofday(&time_7, NULL);
 
-					#ifdef DEBUG_ENABLED
-					out_fp << (convert_to_usec(time_7) - convert_to_usec(time_6)) << " ";
-					#endif
 					tot_color_time = tot_color_time + (convert_to_usec(time_7) - convert_to_usec(time_6));
 
 					#ifdef ENABLE_IMAGE_RESIZE
@@ -153,9 +144,6 @@ int main(int argn, char** argv)
 						resize(next_image, next_resized_im, Size(IM_RESIZE_W,IM_RESIZE_H));
 						gettimeofday(&time_9, NULL);
 
-						#ifdef DEBUG_ENABLED
-						out_fp << (convert_to_usec(time_9) - convert_to_usec(time_8)) << " " << std::endl;
-						#endif
 						tot_resize_time = tot_resize_time + (convert_to_usec(time_9) - convert_to_usec(time_8));
 						
 						#ifdef ENABLE_IMSHOW
@@ -171,9 +159,6 @@ int main(int argn, char** argv)
 						#endif
 						prev_resized_im = next_resized_im.clone();
 					#else
-						#ifdef DEBUG_ENABLED
-						out_fp << "0 " << std::endl; //This only ensures consistency in collected log when Resize is disabled
-						#endif
 
 						#ifdef ENABLE_IMSHOW
 							imshow("Diff images",diff_image);
@@ -194,6 +179,18 @@ int main(int argn, char** argv)
 				}
 			}
 		}
+	//Collect all the final times here
+		#ifdef DEBUG_ENABLED
+		out_fp << (convert_to_usec(time_3) - convert_to_usec(time_2)) << " ";
+		out_fp << (convert_to_usec(time_5) - convert_to_usec(time_4)) << " ";
+		out_fp << (convert_to_usec(time_7) - convert_to_usec(time_6)) << " ";
+		#ifdef ENABLE_IMAGE_RESIZE
+		out_fp << (convert_to_usec(time_9) - convert_to_usec(time_8)) << " " << std::endl;
+		#else
+		out_fp << "0 " << std::endl; //This only ensures consistency in collected log when Resize is disabled
+		#endif
+		#endif
+		
 	}
 	gettimeofday(&end_time, NULL);
 	cap.release();
