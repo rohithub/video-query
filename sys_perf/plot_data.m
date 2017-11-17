@@ -7,11 +7,11 @@ clear; close all; clc;
 %Individual Img Proc log file format  (all values in microseconds)
 %Grab Time, Retrieve time, Color, Resize
 
-num_data_per_iter = 4; % Tells the number of data points collected for each iteration
+num_data_per_iter = 6; % Tells the number of data points collected for each iteration
 num_frame_skips = 0; %[5 10 20 50 100 200]
 num_of_iter = 5;
-% path = 'C:\Users\Rohit\Documents\Umich Courses\Prof Wenisch Project\Logs\mod_log_no_imshow_all.txt';
-path = 'C:\Users\Rohit\Documents\Umich Courses\Prof Wenisch Project\Logs\mod_log_no_imshow.txt';
+path = 'C:\Users\Rohit\Documents\Umich Courses\Prof Wenisch Project\Logs\mod_log_no_imshow_all.txt';
+% path = 'C:\Users\Rohit\Documents\Umich Courses\Prof Wenisch Project\Logs\mod_log_no_imshow.txt';
 %path = 'C:\Users\Rohit\Documents\GitHub\video-query\sys_perf\logs\log_no_imshow.txt';
 
 %Read the log file, scan to get each data point and close the file
@@ -22,22 +22,21 @@ fclose(file_p);
 %Total number of iterations is equal to total data points/data points per
 %iteration
 tot_iters = (length(myContent{1,1}))/num_data_per_iter;
-data_matrix = zeros(num_data_per_iter, tot_iters/num_of_iter);
-sum_matrix = zeros(num_data_per_iter, tot_iters/num_of_iter);
+data_matrix = zeros(num_data_per_iter, tot_iters);
+sum_matrix = zeros(num_data_per_iter, tot_iters);
 count = 1;
-for k=1:num_of_iter
-    for i=1:tot_iters/num_of_iter
-        for j=1:num_data_per_iter
-            data_matrix(j,i) = str2double(myContent{1,1}(count));
-            count = count + 1;
-        end
-        sum_matrix = sum_matrix + data_matrix;
+for i=1:tot_iters
+    for j=1:num_data_per_iter
+        data_matrix(j,i) = str2double(myContent{1,1}(count));
+        count = count + 1;
     end
+    sum_matrix = sum_matrix + data_matrix;
 end
+
 
 sum_matrix = sum_matrix./num_of_iter;
 % plot_titles = {'Total time', 'Video Load', 'Check Opened', 'IM Grab', 'IM Retrieve', 'RGB2Gray', 'Resize'};
-plot_titles = {'IM Grab', 'IM Retrieve', 'RGB2Gray', 'Resize'};
+plot_titles = {'Total Elapsed','Video Load','IM Grab', 'IM Retrieve', 'RGB2Gray', 'Resize'};
 figure;
 
 x = 1:(size(data_matrix,2)-1);
@@ -48,13 +47,17 @@ x = 1:(size(data_matrix,2)-1);
 % title('Time taken for processing each frame of the input video');
 % legend('Grab time', 'Retrieve time', 'RGB to Gray time', 'Resize time 224x224');
 for j=1:size(sum_matrix,1)
-    subplot(2,2,j);
+    subplot(3,2,j);
 %     plot(data_matrix(j,2:end));
 %     xlabel('Iteration #');
 %     ylabel('Elapsed time (uSec)');
     histogram(sum_matrix(j,1:end));
     grid on;
-    xlabel('Time for 1 operation (usec)');
+    if(j==1)
+        xlabel('Time for 1 operation (msec)');
+    else
+        xlabel('Time for 1 operation (usec)');
+    end
     ylabel('Number of frames');
     title(plot_titles{1,j});
 end
