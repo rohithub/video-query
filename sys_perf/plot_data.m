@@ -7,11 +7,11 @@ clear; close all; clc;
 %Individual Img Proc log file format  (all values in microseconds)
 %Grab Time, Retrieve time, Color, Resize
 
-num_data_per_iter = 4; % Tells the number of data points collected for each iteration
+num_data_per_iter = 6; % Tells the number of data points collected for each iteration
 num_frame_skips = 0; %[5 10 20 50 100 200]
 num_of_iter = 5;
-% path = 'C:\Users\Rohit\Documents\Umich Courses\Prof Wenisch Project\Logs\mod_log_no_imshow_all.txt';
-path = 'C:\Users\Rohit\Documents\Umich Courses\Prof Wenisch Project\Logs\mod_log_no_imshow.txt';
+path = 'C:\Users\Rohit\Documents\Umich Courses\Prof Wenisch Project\Logs\log_no_imshow_original_mod_all.txt';
+% path = 'C:\Users\Rohit\Documents\Umich Courses\Prof Wenisch Project\Logs\log_no_imshow_original_mod.txt';
 %path = 'C:\Users\Rohit\Documents\GitHub\video-query\sys_perf\logs\log_no_imshow.txt';
 
 %Read the log file, scan to get each data point and close the file
@@ -39,7 +39,7 @@ end
 
 sum_matrix = sum_matrix./num_of_iter;
 % plot_titles = {'Total time', 'Video Load', 'Check Opened', 'IM Grab', 'IM Retrieve', 'RGB2Gray', 'Resize'};
-plot_titles = {'IM Grab', 'IM Retrieve', 'RGB2Gray', 'Resize'};
+plot_titles = {'Total time', 'Video Open', 'IM Grab', 'IM Retrieve', 'RGB2Gray', 'Resize'};
 figure;
 
 x = 1:(size(data_matrix,2)-1);
@@ -56,7 +56,7 @@ for j=1:size(sum_matrix,1)
 %     xlabel('Iteration #');
 %     ylabel('Elapsed time (uSec)');
     
-    subplot(2,2,j);
+    subplot(3,2,j);
     histogram(sum_matrix(j,1:end));
     
     if(j==1)
