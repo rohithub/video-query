@@ -12,7 +12,7 @@
 
 // Pre-processor directives, controlled from g++ -D inputs
 //#define ENABLE_IMSHOW		1
-//#define ENABLE_IMAGE_RESIZE	1
+#define ENABLE_IMAGE_RESIZE	1
 #define ENABLE_RGB2GRAY		1
 #define ENABLE_DIFF_WRITE_FILE	0
 //#define LOG_TYPE_INFO		1
