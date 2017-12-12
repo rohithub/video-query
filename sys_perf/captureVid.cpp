@@ -12,7 +12,7 @@
 
 // Pre-processor directives, controlled from g++ -D inputs
 //#define ENABLE_IMSHOW		1
-#define ENABLE_IMAGE_RESIZE	1
+//#define ENABLE_IMAGE_RESIZE	1
 #define ENABLE_RGB2GRAY		1
 #define ENABLE_DIFF_WRITE_FILE	0
 //#define LOG_TYPE_INFO		1
@@ -23,8 +23,8 @@
 #define FRAME_SKIP_RATE		10
 #define MAX_INPUT_ARG		4 //Includes the name of the executable
 #define MAX_STRING_LEN		255
-#define IM_RESIZE_W		400
-#define IM_RESIZE_H		400
+#define IM_RESIZE_W		224
+#define IM_RESIZE_H		224
 
 using namespace cv;
 
@@ -58,7 +58,7 @@ int main(int argn, char** argv)
 
 	Mat prev_image, next_image;
 	Mat prev_resized_im, next_resized_im;
-	Mat diff_image;
+	//Mat diff_image;
 
 	int count = 0;
 	std::ofstream out_fp;
@@ -147,7 +147,7 @@ int main(int argn, char** argv)
 						tot_resize_time = tot_resize_time + (convert_to_usec(time_9) - convert_to_usec(time_8));
 						
 						#ifdef ENABLE_IMSHOW
-							imshow("Resized images",diff_image);
+							imshow("Resized images",next_resized_im);
 							waitKey(1);
 						#endif
 						#ifdef ENABLE_WRITE_FRAMES
@@ -161,7 +161,7 @@ int main(int argn, char** argv)
 					#else
 
 						#ifdef ENABLE_IMSHOW
-							imshow("Diff images",diff_image);
+							imshow("Diff images",next_image);
 							waitKey(1);
 						#endif
 						#ifdef ENABLE_WRITE_FRAMES
